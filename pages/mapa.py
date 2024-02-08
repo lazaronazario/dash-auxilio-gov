@@ -114,12 +114,11 @@ with st.container():
         hover_data = ["SOMA_ANUAL"], # Informação extra para aparecer no box
         title = "Percentual de valor destinado a famílias do PBF em relação à população (estimativa IBGE 2018 a 2021) por estado", # Titulo
         center={"lat": -14, "lon": -55}, # Centralização inicial do gráfico
-        zoom=3.2,  # Zoom inicial do gráfico
+        zoom=3.0,  # Zoom inicial do gráfico
         animation_frame = 'ANO', # Coluna que será iterada para a animação
         opacity = 0.6 ,
-        color_continuous_scale='viridis')
-        #color_discrete_sequence=px.colors.sequential.Reds)
-        fig.update_layout(height=800, width = 1000)
+        color_continuous_scale='reds')
+        fig.update_layout(height=700, width = 1000)
         return fig
 
 figura_do_mapa = criar_mapa(basegov2_ordem_crescente, brasil)

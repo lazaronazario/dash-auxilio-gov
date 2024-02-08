@@ -52,7 +52,7 @@ with st.sidebar:
     #icon = Image.open(MC_LOGO)
     st.image(MC_LOGO)
     #st.write("Visit our Website")
-    st.markdown("<h3 style='text-align: center;'>VConheça mais sobre o PBF</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='text-align: center;'>Conheça mais sobre o PBF</h3>", unsafe_allow_html=True)
     flc1, flc2, flc3, flc4= st.columns(4)
     with flc2:
         # FIXME: note que se usarmos a opção com st.image, não ficará centralizado!
@@ -109,24 +109,40 @@ with st.container():
 
     # Gerar gráfico de barras usando seaborn e matplotlib
     #plt.figure(figsize=(8, 6)) 
-    fig, ax = plt.subplots()
+    
     #por algum motivo eu não sei pq não está mostrando quando coloco ela na horizontal. Aí fiz essa gambiarra aqui só pra mostrar e pra tu tbm ver... 
     #não consegui entender pq não está mostrando
     if categoria == 'MES_COMPETENCIA':
-        sns.barplot(x=categoria, y='VALOR_PAGO', data=dados_agrupados.head(50), order=dados_agrupados[categoria],palette='viridis')
-        #paletas que podemos usar: viridis, hot, rocket_r, 
+        fig, ax = plt.subplots(figsize=(6, 2))
+        sns.barplot(x=categoria, y='VALOR_PAGO', data=dados_agrupados.head(50), order=dados_agrupados[categoria],palette='viridis', ax=ax)
         ax.set_xlabel(categoria)
         ax.set_ylabel('VALOR_PAGO')
-    else:
-        sns.barplot(y=categoria, x='VALOR_PAGO', data=dados_agrupados.head(50), order=dados_agrupados[categoria],palette='viridis')
+        ax.set_title('Ranking dos 50 maiores valores de benefícios pagos')
+    elif categoria == 'NME_MUNICIPIO':
+        fig, ax = plt.subplots(figsize=(8, 4))      
+        sns.barplot(y=categoria, x='VALOR_PAGO', data=dados_agrupados.head(50), order=dados_agrupados[categoria],palette='viridis',ax=ax)
         ax.set_ylabel(categoria)
         ax.set_xlabel('VALOR_PAGO')
         plt.rcParams.update({'font.size': 4})
+        ax.set_title('Ranking top 50 municípios')
+    elif categoria == 'NME_REGIAO':
+        fig, ax = plt.subplots(figsize=(8, 3))
+        sns.barplot(y=categoria, x='VALOR_PAGO', data=dados_agrupados.head(50), order=dados_agrupados[categoria],palette='viridis',ax=ax)
+        ax.set_ylabel(categoria)
+        ax.set_xlabel('VALOR_PAGO')
+        plt.rcParams.update({'font.size': 4})
+        ax.set_title('Ranking pela região')
+    elif categoria == 'UF':
+        fig, ax = plt.subplots(figsize=(8, 3))
+        sns.barplot(y=categoria, x='VALOR_PAGO', data=dados_agrupados.head(30), order=dados_agrupados[categoria],palette='viridis',ax=ax)
+        ax.set_ylabel(categoria)
+        ax.set_xlabel('VALOR_PAGO')
+        plt.rcParams.update({'font.size': 3})
+        ax.set_title('Rank dos estados')
     
-    ax.set_title('Rank dos top 50 municípios outliers')
+    
     plt.xticks(rotation=45)
 
-    #color_continuous_scale='reds'
-    #fig.color_continuous_scale='reds'
     # Exibir o gráfico no Streamlit
+    
     st.pyplot(fig)
