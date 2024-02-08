@@ -4,11 +4,11 @@ import numpy as np
 import base64
 import csv
 import seaborn as sns
+import json
 #
 import plotly.express as px
 import plotly.graph_objects as go
 import plotly.offline as po
-from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
 import matplotlib.pyplot as plt
 import plotly.express as px
 import random
@@ -16,15 +16,12 @@ from PIL import Image
 import plotly.figure_factory as ff
 #Tudo que precisamos do util
 from utils import (
-    N_SELECTED,
-    CESAR_LOGO,
-    APP_TITLE,
     PAGE_TITLE,
     MC_LOGO,
     LOGO,
     BR_FLAG,
-    US_FLAG,
     DADOS_GOV,
+    LOGO_GOV
     )
 
 #Título da página e o logo que aparecerá no Browser!!!
@@ -55,18 +52,18 @@ with st.sidebar:
     #icon = Image.open(MC_LOGO)
     st.image(MC_LOGO)
     #st.write("Visit our Website")
-    st.markdown("<h3 style='text-align: center;'>Visit our Website</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='text-align: center;'>VConheça mais sobre o PBF</h3>", unsafe_allow_html=True)
     flc1, flc2, flc3, flc4= st.columns(4)
     with flc2:
         # FIXME: note que se usarmos a opção com st.image, não ficará centralizado!
         #        assim, escolho usar a opção de colocar imagens com Markdown.
         #st.image(BR_FLAG, width=30)
-        mc_site_br = "https://www.mcdonalds.com.br/"  # Replace with your desired URL
-        mc_site_us = "https://www.mcdonalds.com/us/en-us.html"
+        pbf_gov = "https://www.gov.br/mds/pt-br/acoes-e-programas/bolsa-familia"  # Replace with your desired URL
+        site_gov = "https://www.gov.br/pt-br"
 
         st.markdown(
             f'<div style="display: flex; flex-direction: column; align-items: center;">'
-            f'<a href="{mc_site_br}" target="_blank" onclick="open_link(\'{mc_site_br}\')"> '
+            f'<a href="{site_gov}" target="_blank" onclick="open_link(\'{site_gov}\')"> '
             f'<img src="{BR_FLAG}" style="width: 30px;"></a>'
             f'</div>',
             unsafe_allow_html=True 
@@ -77,14 +74,14 @@ with st.sidebar:
         #st.image(US_FLAG, width=30)
         st.markdown(
             f'<div style="display: flex; flex-direction: column; align-items: center;">'
-            f'<a href="{mc_site_us}" target="_blank" onclick="open_link(\'{mc_site_us}\')"> '
-            f'<img src="{US_FLAG}" style="width: 30px;"></a>'
+            f'<a href="{pbf_gov}" target="_blank" onclick="open_link(\'{pbf_gov}\')"> '
+            f'<img src="{LOGO_GOV}" style="width: 50px;"></a>'
             f'</div>',
             unsafe_allow_html=True
         )    
 
-mcol1 = st.columns(1)
-with st.container(): 
+with st.container():
+
     #Montante pago por município pelo gov considerando todo o período
     vlr_pag_municipio = df.groupby(['NME_MUNICIPIO'])['VALOR_PAGO'].sum().reset_index().copy()
 
@@ -111,15 +108,17 @@ with st.container():
     dados_agrupados = dados_agrupados.sort_values(by='VALOR_PAGO', ascending=False).tail(50)    
 
     # Gerar gráfico de barras usando seaborn e matplotlib
+    #plt.figure(figsize=(8, 6)) 
     fig, ax = plt.subplots()
     #por algum motivo eu não sei pq não está mostrando quando coloco ela na horizontal. Aí fiz essa gambiarra aqui só pra mostrar e pra tu tbm ver... 
     #não consegui entender pq não está mostrando
     if categoria == 'MES_COMPETENCIA':
-        sns.barplot(x=categoria, y='VALOR_PAGO', data=dados_agrupados.head(50), order=dados_agrupados[categoria])
+        sns.barplot(x=categoria, y='VALOR_PAGO', data=dados_agrupados.head(50), order=dados_agrupados[categoria],palette='viridis')
+        #paletas que podemos usar: viridis, hot, rocket_r, 
         ax.set_xlabel(categoria)
         ax.set_ylabel('VALOR_PAGO')
     else:
-        sns.barplot(y=categoria, x='VALOR_PAGO', data=dados_agrupados.head(50), order=dados_agrupados[categoria])
+        sns.barplot(y=categoria, x='VALOR_PAGO', data=dados_agrupados.head(50), order=dados_agrupados[categoria],palette='viridis')
         ax.set_ylabel(categoria)
         ax.set_xlabel('VALOR_PAGO')
         plt.rcParams.update({'font.size': 4})
@@ -127,5 +126,7 @@ with st.container():
     ax.set_title('Rank dos top 50 municípios outliers')
     plt.xticks(rotation=45)
 
+    #color_continuous_scale='reds'
+    #fig.color_continuous_scale='reds'
     # Exibir o gráfico no Streamlit
     st.pyplot(fig)
