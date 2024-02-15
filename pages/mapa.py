@@ -27,7 +27,7 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-st.title("Mapa")
+st.markdown("<h1 style='color: gray;'>Dados PBF do ano 2018 à 2021</h1>", unsafe_allow_html=True)
 
 with st.sidebar:
     #icon = Image.open(MC_LOGO)
@@ -117,7 +117,7 @@ with st.container():
         zoom=3.0,  # Zoom inicial do gráfico
         animation_frame = 'ANO', # Coluna que será iterada para a animação
         opacity = 0.6 ,
-        color_continuous_scale='reds')
+        color_continuous_scale='viridis')
         fig.update_layout(height=700, width = 1000)
         return fig
 
